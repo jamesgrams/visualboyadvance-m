@@ -2529,7 +2529,7 @@ void GameArea::MouseEvent(wxMouseEvent& ev)
     // Ignore small movements.
     if (!ev.Moving() || (std::abs(cur_pos.x - mouse_last_pos.x) >= 11 && std::abs(cur_pos.y - mouse_last_pos.y) >= 11)) {
         ShowPointer();
-        ShowMenuBar();
+        //ShowMenuBar();
     }
 
     mouse_last_pos = cur_pos;

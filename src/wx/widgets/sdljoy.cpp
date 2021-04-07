@@ -164,15 +164,10 @@ void wxSDLJoyState::ProcessEvent(int32_t event_type,
     bool value_changed = false;
 
     switch (event_type) {
-    case SDL_JOYBUTTONDOWN:
-    case SDL_JOYBUTTONUP:
-        // Do not process joystick events for game controllers.
-        if (game_controller_) {
-            return;
-        }
-    // Fallhrough.
     case SDL_CONTROLLERBUTTONDOWN:
     case SDL_CONTROLLERBUTTONUP:
+    case SDL_JOYBUTTONDOWN:
+    case SDL_JOYBUTTONUP:
         control = wxSDLControl::WXSDLJOY_BUTTON;
         previous_value = buttons_[control_index];
         if (previous_value != control_value) {
@@ -194,13 +189,8 @@ void wxSDLJoyState::ProcessEvent(int32_t event_type,
         }
         break;
 
-    case SDL_JOYAXISMOTION:
-        // Do not process joystick events for game controllers.
-        if (game_controller_) {
-            return;
-        }
-    // Fallhrough.
     case SDL_CONTROLLERAXISMOTION:
+    case SDL_JOYAXISMOTION:
         control = wxSDLControl::WXSDLJOY_AXIS;
         previous_value = axis_[control_index];
         if (previous_value != control_value) {
@@ -231,7 +221,7 @@ void wxSDLJoyState::ProcessEvent(int32_t event_type,
 }
 
 void wxSDLJoyState::Poll() {
-    if (game_controller_) {
+    /*if (game_controller_) {
         for (uint8_t but = 0; but < SDL_CONTROLLER_BUTTON_MAX; but++) {
             uint16_t previous_value = buttons_[but];
             uint16_t current_value =
@@ -254,7 +244,7 @@ void wxSDLJoyState::Poll() {
             if (previous_value != current_value)
                 ProcessEvent(SDL_CONTROLLERAXISMOTION, axis, current_value);
         }
-    } else {
+    } else {*/
         for (uint8_t but = 0; but < SDL_JoystickNumButtons(joystick_); but++) {
             uint16_t previous_value = buttons_[but];
             uint16_t current_value = SDL_JoystickGetButton(joystick_, but);
@@ -263,14 +253,14 @@ void wxSDLJoyState::Poll() {
                 ProcessEvent(SDL_JOYBUTTONUP, but, current_value);
         }
 
-        for (uint8_t axis = 0; axis < SDL_JoystickNumAxes(joystick_); axis++) {
+        /*for (uint8_t axis = 0; axis < SDL_JoystickNumAxes(joystick_); axis++) {
             uint16_t previous_value = axis_[axis];
             uint16_t current_value =
                 AxisValueToDirection(SDL_JoystickGetButton(joystick_, axis));
 
             if (previous_value != current_value)
                 ProcessEvent(SDL_JOYAXISMOTION, axis, current_value);
-        }
+        }*/
 
         for (uint8_t hat = 0; hat < SDL_JoystickNumHats(joystick_); hat++) {
             uint16_t previous_value = hats_[hat];
@@ -279,7 +269,7 @@ void wxSDLJoyState::Poll() {
             if (previous_value != current_value)
                 ProcessEvent(SDL_JOYHATMOTION, hat, current_value);
         }
-    }
+    //}
 }
 
 void wxSDLJoyState::SetRumble(bool activate_rumble) {
@@ -327,7 +317,7 @@ void wxSDLJoy::Poll() {
         switch (e.type) {
         case SDL_CONTROLLERBUTTONDOWN:
         case SDL_CONTROLLERBUTTONUP:
-        {
+        /*{
             wxSDLJoyState* joy_state = FindJoyState(e.cbutton.which);
             if (joy_state) {
                 joy_state->ProcessEvent(
@@ -335,10 +325,10 @@ void wxSDLJoy::Poll() {
             }
             got_event = true;
             break;
-        }
+        }*/
 
         case SDL_CONTROLLERAXISMOTION:
-        {
+        /*{
             wxSDLJoyState* joy_state = FindJoyState(e.caxis.which);
             if (joy_state) {
                 joy_state->ProcessEvent(
@@ -346,7 +336,7 @@ void wxSDLJoy::Poll() {
             }
             got_event = true;
             break;
-        }
+        }*/
 
         case SDL_CONTROLLERDEVICEADDED:
         case SDL_CONTROLLERDEVICEREMOVED:
